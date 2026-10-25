@@ -5,51 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Undangan Pernikahan Nida & Maiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Koran Klasik -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --color-dark: #1E352F;
-            --color-accent: #5F8D76;
-            --color-bg: #F4F7F5;
+            --color-paper: #EBF0EC; /* Kertas hijau pucat vintage */
+            --color-ink: #162B1E; /* Tinta hijau sangat gelap (menggantikan hitam) */
+            --color-ink-light: #2A4A36;
         }
 
         body {
-            background-color: var(--color-bg);
-            color: var(--color-dark);
-            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-paper);
+            color: var(--color-ink);
+            font-family: 'Old Standard TT', serif;
             overflow: hidden; /* Dikunci sebelum undangan dibuka */
-            position: relative;
         }
 
-        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
-        .font-cinzel { font-family: 'Cinzel', serif; }
-
-        /* Latar Belakang Watercolor Brush (Menggunakan CSS Gradient Radial) */
-        .watercolor-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(95, 141, 118, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(132, 169, 140, 0.15) 0%, transparent 40%);
-            z-index: -2;
+        h1, h2, h3, h4, h5, .font-headline { 
+            font-family: 'Playfair Display', serif; 
         }
 
-        /* Glassmorphism Panel (Agar tidak flat) */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 32px 0 rgba(30, 53, 47, 0.1);
-            border-radius: 24px;
+        /* Garis Koran Khas */
+        .border-news-double { border-top: 4px double var(--color-ink); border-bottom: 4px double var(--color-ink); }
+        .border-news-thick { border-top: 3px solid var(--color-ink); }
+        
+        /* Huruf Awal Berita (Drop Cap) */
+        .drop-cap::first-letter {
+            float: left;
+            font-size: 4.5rem;
+            line-height: 0.8;
+            padding-right: 0.5rem;
+            padding-top: 0.2rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            color: var(--color-ink);
         }
 
-        /* ================= ANIMASI SCROLL ================= */
+        /* Kolom Berita */
+        .news-columns { column-count: 2; column-gap: 2rem; }
+        @media (max-width: 768px) { .news-columns { column-count: 1; } }
+
+        /* Filter Foto agar bernuansa Koran Hijau Vintage */
+        .news-img {
+            filter: grayscale(100%) sepia(30%) hue-rotate(70deg) contrast(120%);
+            border: 1px solid var(--color-ink);
+            padding: 4px;
+            background: #fff;
+        }
+
+        /* ================= ANIMASI SCROLL (DIPERLAMBAT) ================= */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+            transform: translateY(60px);
+            transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1); /* Lebih lambat dan halus */
         }
         .reveal.active {
             opacity: 1;
@@ -59,205 +69,228 @@
         /* ================= ANIMASI DAUN BERJATUHAN ================= */
         .falling-leaves-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: -1; overflow: hidden;
+            pointer-events: none; z-index: 0; overflow: hidden;
         }
         .leaf {
             position: absolute;
-            width: 40px; height: 40px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%235F8D76" opacity="0.6"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 4c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>'); /* Placeholder daun */
+            width: 35px; height: 35px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232A4A36" opacity="0.3"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 4c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>');
             background-size: contain; background-repeat: no-repeat;
             animation: fall linear infinite;
         }
         @keyframes fall {
             0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
             100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; }
         }
-        /* Variasi animasi daun */
-        .leaf:nth-child(1) { left: 10%; animation-duration: 12s; animation-delay: 0s; width: 30px; }
-        .leaf:nth-child(2) { left: 30%; animation-duration: 15s; animation-delay: 2s; width: 45px; }
-        .leaf:nth-child(3) { left: 50%; animation-duration: 11s; animation-delay: 4s; width: 25px; }
-        .leaf:nth-child(4) { left: 70%; animation-duration: 14s; animation-delay: 1s; width: 35px; }
-        .leaf:nth-child(5) { left: 90%; animation-duration: 13s; animation-delay: 3s; width: 50px; }
+        .leaf:nth-child(1) { left: 10%; animation-duration: 16s; animation-delay: 0s; }
+        .leaf:nth-child(2) { left: 40%; animation-duration: 19s; animation-delay: 2s; width: 45px; }
+        .leaf:nth-child(3) { left: 70%; animation-duration: 14s; animation-delay: 5s; width: 25px; }
+        .leaf:nth-child(4) { left: 90%; animation-duration: 17s; animation-delay: 1s; width: 40px; }
 
-        /* Cover Halaman Depan */
+        /* Halaman Cover */
         #cover-page {
-            transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+            transition: opacity 1.5s ease-in-out, visibility 1.5s ease-in-out;
         }
     </style>
 </head>
 <body>
 
-    <!-- Latar Belakang -->
-    <div class="watercolor-bg"></div>
+    <!-- Animasi Daun Latar Belakang -->
     <div class="falling-leaves-container">
-        <div class="leaf"></div><div class="leaf"></div><div class="leaf"></div>
+        <div class="leaf"></div><div class="leaf"></div>
         <div class="leaf"></div><div class="leaf"></div>
     </div>
 
-    <!-- Audio Player (Tersembunyi) -->
-    <!-- Ganti URL 'src' di bawah ini dengan tautan lagu mp3 Wedding Al-Muqit milik Anda -->
+    <!-- Audio Player (Tautan Nasyid) -->
     <audio id="bg-music" loop>
         <source src="lagu-almuqit.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- ================= HALAMAN DEPAN (COVER) ================= -->
-    <div id="cover-page" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#F4F7F5] bg-opacity-95 backdrop-blur-md px-6 text-center">
-        <p class="text-sm tracking-[0.3em] uppercase mb-4 text-[#5F8D76]">Pernikahan dari</p>
-        <h1 class="text-6xl md:text-8xl font-serif text-[var(--color-dark)] mb-4">Maiz <br><span class="text-4xl italic font-normal text-[#5F8D76]">&amp;</span><br> Nida</h1>
-        
-        <div class="mt-8 mb-12">
-            <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Kepada Yth.</p>
-            <h2 id="nama-tamu-cover" class="text-2xl font-bold font-serif text-[var(--color-dark)]">Tamu Undangan</h2>
-        </div>
+    <!-- ================= HALAMAN DEPAN (COVER BERITA) ================= -->
+    <div id="cover-page" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--color-paper)] p-4 md:p-8 overflow-y-auto">
+        <div class="w-full max-w-3xl border border-[var(--color-ink)] p-4 md:p-8 text-center bg-[#EBF0EC]">
+            
+            <p class="uppercase tracking-[0.3em] text-xs font-bold mb-2">Edisi Terbatas &bull; Kabar Bahagia</p>
+            <h1 class="text-5xl md:text-7xl font-headline font-bold mb-6 leading-none">THE WEDDING<br>JOURNAL</h1>
+            
+            <!-- Foto Besar di Cover -->
+            <div class="w-full h-64 md:h-96 mb-6 overflow-hidden news-img">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=1000" alt="Prewedding Cover" class="w-full h-full object-cover">
+            </div>
 
-        <button onclick="bukaUndangan()" class="bg-[#5F8D76] text-white px-8 py-3 rounded-full uppercase tracking-widest text-sm font-semibold hover:bg-[#1E352F] transition-all shadow-lg transform hover:scale-105">
-            Buka Undangan
-        </button>
+            <h2 class="text-3xl md:text-5xl font-headline font-bold italic mb-6">Maiz &amp; Nida</h2>
+            
+            <div class="border-news-double py-4 my-6 w-3/4 mx-auto">
+                <p class="text-xs uppercase tracking-widest mb-1">Diberikan Khusus Kepada Yth.</p>
+                <h3 id="nama-tamu-cover" class="text-2xl font-headline font-bold">Tamu Kehormatan</h3>
+            </div>
+
+            <button onclick="bukaUndangan()" class="mt-4 border-2 border-[var(--color-ink)] bg-transparent text-[var(--color-ink)] px-8 py-3 uppercase tracking-widest text-sm font-bold hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)] transition-all duration-500">
+                Buka Lembaran
+            </button>
+        </div>
     </div>
 
-    <!-- ================= KONTEN UTAMA ================= -->
-    <main id="main-content" class="w-full max-w-2xl mx-auto flex flex-col items-center p-6 relative z-10 text-center opacity-0 transition-opacity duration-1000">
+    <!-- ================= KONTEN UTAMA (ISI KORAN) ================= -->
+    <main id="main-content" class="w-full max-w-4xl mx-auto p-4 md:p-10 relative z-10 opacity-0 transition-opacity duration-1000">
         
-        <!-- Header Utama -->
-        <div class="reveal mt-16 mb-10 w-full">
-            <h1 class="text-6xl font-serif mb-4">M <span class="text-[#5F8D76]">&amp;</span> N</h1>
-            <p class="text-sm tracking-[0.2em] uppercase text-[#5F8D76]">2 Januari 2027</p>
-        </div>
+        <!-- Header Koran -->
+        <header class="text-center mb-10 reveal">
+            <h1 class="text-4xl md:text-6xl font-headline font-bold uppercase tracking-tight mb-4">Warta Pernikahan</h1>
+            <div class="border-news-double py-2 flex justify-between text-[10px] md:text-xs uppercase tracking-widest font-bold">
+                <span>Vol. 1 - ProMaiztoNida</span>
+                <span>Yogyakarta, Januari 2027</span>
+                <span>Sirkulasi Terbatas</span>
+            </div>
+        </header>
 
-        <!-- Kutipan Ayat -->
-        <div class="reveal glass-panel p-8 my-10 w-full">
-            <p class="text-sm font-light leading-relaxed italic text-gray-700">
-                "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang..." <br>
-                <span class="font-semibold block mt-4 text-[#5F8D76] font-cinzel">(QS. Ar-Rum: 21)</span>
+        <!-- Ayat Suci / Kutipan -->
+        <div class="reveal text-center mb-12 px-4 md:px-12">
+            <h2 class="text-2xl font-headline font-bold mb-4">DUA HATI DALAM SATU KETAATAN</h2>
+            <p class="text-lg md:text-xl italic leading-relaxed text-[var(--color-ink-light)]">
+                "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang..."
             </p>
+            <p class="font-bold mt-4">(QS. Ar-Rum: 21)</p>
         </div>
 
-        <!-- Profil Mempelai -->
-        <div class="reveal w-full my-12 space-y-12">
-            <!-- Mempelai Pria -->
-            <div class="glass-panel p-6 w-full">
-                <h2 class="text-3xl font-serif mb-2 font-bold text-[#1E352F]">Ilham Maizzudin</h2>
-                <p class="text-xs font-light text-gray-600">Putra pertama dari <br>Bapak Suroso & Ibu Maria Sulistyawati</p>
-            </div>
-            
-            <div class="text-4xl font-serif text-[#5F8D76]">&amp;</div>
-            
-            <!-- Mempelai Wanita -->
-            <div class="glass-panel p-6 w-full">
-                <h2 class="text-3xl font-serif mb-2 font-bold text-[#1E352F]">Nida Fauzia</h2>
-                <p class="text-xs font-light text-gray-600">Putri kedua dari <br>Bapak Nanang Iskadri (rahimahullah) & Ibu Dariningsih</p>
-            </div>
+        <!-- Visual / Galeri 1 -->
+        <div class="reveal w-full mb-16 news-img h-64 md:h-80">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1000" alt="Cincin Pernikahan" class="w-full h-full object-cover object-center">
         </div>
 
-        <!-- Detail Acara -->
-        <div class="reveal w-full my-16">
-            <h3 class="text-3xl font-serif mb-8 text-[#5F8D76]">Rangkaian Acara</h3>
-            
-            <div class="glass-panel p-8 w-full relative overflow-hidden">
-                <!-- Aksen daun di pojok form -->
-                <div class="absolute -top-10 -right-10 w-32 h-32 bg-[#5F8D76] opacity-10 rounded-full blur-2xl"></div>
-                
-                <h4 class="text-2xl font-bold font-serif mb-2">Sabtu, 2 Januari 2027</h4>
-                <div class="w-16 h-1 bg-[#5F8D76] mx-auto mb-6 rounded-full"></div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
-                    <div>
-                        <h3 class="text-xl font-semibold tracking-wider text-[#1E352F]">AKAD NIKAH</h3>
-                        <p class="text-sm font-light mt-1">08.00 - 09.00 WIB</p>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold tracking-wider text-[#1E352F]">RESEPSI</h3>
-                        <p class="text-sm font-light mt-1">09.30 - 11.30 WIB</p>
-                    </div>
+        <!-- Profil Mempelai (Format 2 Kolom Kanan Kiri) -->
+        <div class="reveal border-news-thick pt-8 mb-16 flex flex-col md:flex-row gap-8 md:gap-4 text-center">
+            <div class="md:w-1/2 px-4">
+                <h3 class="text-sm uppercase tracking-widest mb-2 font-bold">Mempelai Pria</h3>
+                <h2 class="text-3xl font-headline font-bold mb-4">Ilham Maizzudin</h2>
+                <div class="w-24 h-24 mx-auto rounded-full overflow-hidden news-img mb-4">
+                    <!-- Foto Maiz (Bisa diganti) -->
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200" alt="Maiz" class="w-full h-full object-cover">
                 </div>
-                
-                <div class="border-t border-gray-300 pt-6 mt-4">
-                    <p class="font-bold text-lg text-[#1E352F]">Waroeng Omah Sawah</p>
-                    <p class="text-xs font-light mt-2 leading-relaxed">Miri, Timbulharjo, Kec. Sewon, Kabupaten Bantul,<br>Daerah Istimewa Yogyakarta 55185</p>
-                    <a href="https://maps.google.com" target="_blank" class="inline-block mt-4 text-xs font-semibold text-white bg-[#5F8D76] px-4 py-2 rounded-full shadow hover:bg-[#1E352F] transition">Lihat Peta Lokasi</a>
+                <p class="text-sm leading-relaxed">Putra pertama dari <br>Bapak Suroso & Ibu Maria Sulistyawati</p>
+            </div>
+            
+            <div class="hidden md:flex items-center justify-center text-4xl font-headline italic">&amp;</div>
+            
+            <div class="md:w-1/2 px-4 border-t border-[var(--color-ink)] md:border-t-0 pt-8 md:pt-0">
+                <h3 class="text-sm uppercase tracking-widest mb-2 font-bold">Mempelai Wanita</h3>
+                <h2 class="text-3xl font-headline font-bold mb-4">Nida Fauzia</h2>
+                <div class="w-24 h-24 mx-auto rounded-full overflow-hidden news-img mb-4">
+                    <!-- Foto Nida (Bisa diganti) -->
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200" alt="Nida" class="w-full h-full object-cover">
                 </div>
+                <p class="text-sm leading-relaxed">Putri kedua dari <br>Bapak Nanang Iskadri (rahimahullah) & Ibu Dariningsih</p>
             </div>
         </div>
 
-        <!-- Kisah Cerita -->
-        <div class="reveal text-left my-16 w-full">
-            <h3 class="text-3xl font-serif text-center mb-10 text-[#1E352F]">Berawal dari Pertemuan,<br>Bermuara pada Ketaatan</h3>
+        <!-- Kisah Cerita (Artikel Utama) -->
+        <div class="reveal border-news-thick pt-8 mb-16">
+            <h2 class="text-3xl md:text-5xl font-headline font-bold text-center mb-8 uppercase">Berawal dari Pertemuan,<br>Bermuara pada Ketaatan</h2>
             
-            <div class="space-y-6 text-sm font-light leading-loose text-gray-700 text-justify relative">
-                <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#5F8D76] to-transparent rounded-full opacity-30 -ml-4"></div>
-                <p>
+            <div class="news-columns text-justify text-lg leading-loose">
+                <p class="drop-cap mb-4">
                     Keberanian seorang laki-laki bukan sekadar terucap melalui kata-kata, melainkan nyata dalam langkah dan kesungguhannya. Begitulah Allah menuntun dua hati untuk saling menemukan, melalui perantara Ustazah Ismaliah, sosok yang kami anggap seperti ibu sendiri.
                 </p>
-                <p>
-                    Sebuah pesan WhatsApp tentang seorang ikhwan yang siap menikah menjadi awal kisah Nida dan Maiz. Berawal dari pertukaran CV, Alhamdulillah, Allah hadirkan kecocokan dan kemantapan hati. Bahkan sebelum melihat rupa Nida, Maiz telah lebih dahulu memantapkan niatnya.
+                <p class="mb-4">
+                    Sebuah pesan WhatsApp tentang seorang ikhwan yang siap menikah menjadi awal kisah Nida dan Maiz. Berawal dari pertukaran CV, Alhamdulillah, Allah hadirkan kecocokan dan kemantapan hati. Bahkan sebelum melihat rupa Nida, Maiz telah lebih dahulu memantapkan niatnya. Sebab terkadang, kesungguhan menemukan jalannya sebelum mata sempat memandang.
+                </p>
+                <!-- Foto di tengah artikel koran -->
+                <div class="news-img w-full mb-4 inline-block">
+                    <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=800" alt="Perjalanan" class="w-full h-auto">
+                    <p class="text-[10px] text-center mt-1 uppercase italic">Langkah awal menuju ibadah terpanjang.</p>
+                </div>
+                <p class="mb-4">
+                    Dari sebuah pesan sederhana, dimulailah perjalanan yang begitu singkat: ta’aruf pada September 2026, nazhor dan khitbah pada Oktober 2026, hingga akad dan walimah pada Januari 2027. Insyaallah, sebuah awal untuk membangun rumah tangga sebagai ladang ibadah dan mengikuti sunnah Rasulullah ﷺ.
                 </p>
                 <p>
-                    Dari sebuah pesan sederhana, dimulailah perjalanan yang begitu singkat: ta’aruf pada September 2026, nazhor dan khitbah pada Oktober 2026, hingga akad dan walimah pada Januari 2027. Insyaallah, sebuah awal untuk membangun rumah tangga sebagai ladang ibadah.
-                </p>
-                <p>
-                    Semoga cinta ini bukan sekadar tentang saling menemukan di dunia, melainkan tentang berjalan beriringan dalam ibadah hingga kelak Allah pertemukan kembali di surga-Nya.
+                    Semoga Allah memberkahi setiap langkah, melapangkan pintu rezeki, serta menuntun kami untuk senantiasa saling menguatkan dalam kebaikan. Semoga cinta ini bukan sekadar tentang saling menemukan di dunia, melainkan tentang berjalan beriringan dalam ibadah hingga kelak Allah pertemukan kembali di surga-Nya.
                 </p>
             </div>
-            <p class="text-center font-bold text-[#5F8D76] text-xl mt-8 font-cinzel">#ProMaiztoNida</p>
         </div>
 
-        <!-- RSVP Form -->
-        <div class="reveal w-full my-16 glass-panel p-8">
-            <h3 class="text-3xl font-serif mb-6 text-[#1E352F]">Kehadiran & Doa</h3>
-            <form id="rsvp-form" class="space-y-4 text-left">
-                <input type="text" id="nama" placeholder="Nama Anda" class="w-full border-b-2 border-gray-300 p-3 bg-transparent text-sm focus:outline-none focus:border-[#5F8D76] transition-colors" required>
-                <select id="kehadiran" class="w-full border-b-2 border-gray-300 p-3 bg-transparent text-sm focus:outline-none focus:border-[#5F8D76] transition-colors" required>
+        <!-- Pengumuman Acara (Kotak Iklan Baris Klasik) -->
+        <div class="reveal border-4 border-[var(--color-ink)] p-6 md:p-10 mb-16 text-center">
+            <h2 class="text-3xl font-headline font-bold uppercase mb-2">Jadwal Pelaksanaan</h2>
+            <p class="text-xl italic mb-8">Sabtu, 2 Januari 2027</p>
+            
+            <div class="flex flex-col md:flex-row justify-around items-center gap-8 mb-8">
+                <div class="w-full md:w-1/2">
+                    <h3 class="text-2xl font-bold tracking-widest uppercase border-b-2 border-dashed border-[var(--color-ink)] pb-2 mb-4">Akad Nikah</h3>
+                    <p class="text-xl">08.00 - 09.00 WIB</p>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <h3 class="text-2xl font-bold tracking-widest uppercase border-b-2 border-dashed border-[var(--color-ink)] pb-2 mb-4">Resepsi</h3>
+                    <p class="text-xl">09.30 - 11.30 WIB</p>
+                </div>
+            </div>
+            
+            <div class="bg-[var(--color-ink-light)] text-[var(--color-paper)] p-6">
+                <h4 class="text-xl font-bold uppercase mb-2">Waroeng Omah Sawah</h4>
+                <p class="text-sm leading-relaxed mb-4">Miri, Timbulharjo, Kec. Sewon, Kabupaten Bantul,<br>Daerah Istimewa Yogyakarta 55185</p>
+                <a href="https://maps.google.com" target="_blank" class="inline-block bg-[var(--color-paper)] text-[var(--color-ink)] px-6 py-2 text-sm font-bold uppercase tracking-widest hover:bg-gray-300 transition">Panduan Lokasi</a>
+            </div>
+        </div>
+
+        <!-- Kolom RSVP & Ucapan -->
+        <div class="reveal border-news-thick pt-8 pb-16">
+            <h2 class="text-3xl font-headline font-bold text-center uppercase mb-8">Telegram & RSVP</h2>
+            <p class="text-center mb-6 italic">Sampaikan pesan, doa, serta konfirmasi kehadiran Anda untuk edisi ini.</p>
+            
+            <form class="max-w-xl mx-auto space-y-4">
+                <input type="text" placeholder="Nama Lengkap" class="w-full border border-[var(--color-ink)] p-3 bg-transparent font-bold focus:outline-none" required>
+                <select class="w-full border border-[var(--color-ink)] p-3 bg-transparent font-bold focus:outline-none" required>
                     <option value="" disabled selected>Konfirmasi Kehadiran</option>
                     <option value="Hadir">Insyaallah Hadir</option>
-                    <option value="Tidak Hadir">Maaf, Belum Bisa Hadir</option>
+                    <option value="Tidak Hadir">Mohon Maaf, Belum Bisa Hadir</option>
                 </select>
-                <textarea id="ucapan" placeholder="Tulis ucapan dan doa untuk mempelai..." rows="3" class="w-full border-b-2 border-gray-300 p-3 bg-transparent text-sm focus:outline-none focus:border-[#5F8D76] transition-colors" required></textarea>
-                <button type="button" class="w-full bg-[#1E352F] text-white px-4 py-3 rounded-full font-semibold uppercase tracking-widest text-sm hover:bg-[#5F8D76] transition-all shadow-md mt-4">Kirim Pesan</button>
+                <textarea placeholder="Tuliskan ucapan dan doa..." rows="4" class="w-full border border-[var(--color-ink)] p-3 bg-transparent focus:outline-none" required></textarea>
+                <button type="button" class="w-full bg-[var(--color-ink)] text-[var(--color-paper)] px-4 py-4 font-bold uppercase tracking-widest hover:bg-[var(--color-ink-light)] transition">Kirim Pesan via Kurir</button>
             </form>
         </div>
         
-        <footer class="mt-10 mb-20 text-xs text-gray-500 font-light">
-            &copy; 2027. Maiz & Nida.
+        <!-- Footer -->
+        <footer class="border-t border-[var(--color-ink)] py-6 text-center text-xs uppercase tracking-widest font-bold">
+            <p>&copy; 2027 ProMaiztoNida. Diterbitkan secara independen.</p>
         </footer>
     </main>
 
     <script>
-        // 1. Tangkap Nama Tamu dari URL
+        // Tangkap Nama Tamu
         const urlParams = new URLSearchParams(window.location.search);
         const namaTamu = urlParams.get('to');
         if (namaTamu) {
             document.getElementById('nama-tamu-cover').innerText = namaTamu;
         }
 
-        // 2. Fungsi Buka Undangan
+        // Fungsi Buka Undangan
         function bukaUndangan() {
-            // Hilangkan Halaman Depan
+            // Hilangkan Halaman Depan dengan perlahan
             document.getElementById('cover-page').style.opacity = '0';
             setTimeout(() => {
-                document.getElementById('cover-page').style.visibility = 'hidden';
-            }, 1000);
+                document.getElementById('cover-page').style.display = 'none';
+            }, 1500); // Sinkron dengan durasi transisi
             
-            // Buka Scroll dan tampilkan konten utama
+            // Buka Scroll dan tampilkan konten
             document.body.style.overflow = 'auto';
             document.getElementById('main-content').style.opacity = '1';
             
-            // Putar Musik
+            // Putar Nasyid
             const audio = document.getElementById('bg-music');
-            audio.play().catch(error => console.log("Autoplay diblokir browser, pengguna harus klik manual", error));
+            audio.play().catch(e => console.log("Autoplay diblokir", e));
             
-            // Panggil fungsi animasi scroll pertama kali
-            reveal();
+            // Inisialisasi animasi scroll pertama kali
+            setTimeout(reveal, 100);
         }
 
-        // 3. Animasi Scroll (Intersection Observer alternatif menggunakan event listener murni)
+        // Animasi Scroll
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
                 var windowHeight = window.innerHeight;
                 var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 100; // Jarak kemunculan sebelum masuk layar
+                var elementVisible = 120; // Jarak kemunculan disesuaikan
 
                 if (elementTop < windowHeight - elementVisible) {
                     reveals[i].classList.add("active");

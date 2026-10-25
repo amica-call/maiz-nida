@@ -5,150 +5,266 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Undangan Pernikahan Nida & Maiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     
     <style>
+        :root {
+            --color-dark: #1E352F;
+            --color-accent: #5F8D76;
+            --color-bg: #F4F7F5;
+        }
+
         body {
-            background-color: #FAFAFA;
-            color: #2F3E2C;
+            background-color: var(--color-bg);
+            color: var(--color-dark);
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; /* Dikunci sebelum undangan dibuka */
+            position: relative;
         }
-        h1, h2, h3, .font-serif { font-family: 'Cormorant Garamond', serif; }
-        p, .font-sans { font-family: 'Montserrat', sans-serif; }
 
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(5deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
-        }
-        .animate-float { animation: float 6s ease-in-out infinite; }
+        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Latar Belakang Watercolor Brush (Menggunakan CSS Gradient Radial) */
+        .watercolor-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(95, 141, 118, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(132, 169, 140, 0.15) 0%, transparent 40%);
+            z-index: -2;
         }
-        .animate-fade-in { animation: fadeInUp 1.5s ease-out forwards; }
-        .delay-100 { animation-delay: 0.2s; opacity: 0; }
-        .delay-200 { animation-delay: 0.5s; opacity: 0; }
-        .delay-300 { animation-delay: 0.8s; opacity: 0; }
+
+        /* Glassmorphism Panel (Agar tidak flat) */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(30, 53, 47, 0.1);
+            border-radius: 24px;
+        }
+
+        /* ================= ANIMASI SCROLL ================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ================= ANIMASI DAUN BERJATUHAN ================= */
+        .falling-leaves-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1; overflow: hidden;
+        }
+        .leaf {
+            position: absolute;
+            width: 40px; height: 40px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%235F8D76" opacity="0.6"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 4c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>'); /* Placeholder daun */
+            background-size: contain; background-repeat: no-repeat;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; }
+        }
+        /* Variasi animasi daun */
+        .leaf:nth-child(1) { left: 10%; animation-duration: 12s; animation-delay: 0s; width: 30px; }
+        .leaf:nth-child(2) { left: 30%; animation-duration: 15s; animation-delay: 2s; width: 45px; }
+        .leaf:nth-child(3) { left: 50%; animation-duration: 11s; animation-delay: 4s; width: 25px; }
+        .leaf:nth-child(4) { left: 70%; animation-duration: 14s; animation-delay: 1s; width: 35px; }
+        .leaf:nth-child(5) { left: 90%; animation-duration: 13s; animation-delay: 3s; width: 50px; }
+
+        /* Cover Halaman Depan */
+        #cover-page {
+            transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+        }
     </style>
 </head>
-<body class="overflow-x-hidden antialiased flex flex-col items-center">
+<body>
 
-    <!-- Ornamen Atas -->
-    <div class="absolute top-0 left-0 w-32 h-32 md:w-48 md:h-48 opacity-70 animate-float pointer-events-none">
-        <svg viewBox="0 0 200 200" fill="#A3B18A" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10,100 C10,50 50,10 100,10 C100,10 90,50 90,100 C90,150 50,190 10,190 C10,190 20,150 10,100 Z" opacity="0.6"/>
-            <path d="M100,10 C150,10 190,50 190,100 C190,150 150,190 100,190 Z" opacity="0.4"/>
-        </svg>
+    <!-- Latar Belakang -->
+    <div class="watercolor-bg"></div>
+    <div class="falling-leaves-container">
+        <div class="leaf"></div><div class="leaf"></div><div class="leaf"></div>
+        <div class="leaf"></div><div class="leaf"></div>
     </div>
 
-    <main class="w-full max-w-lg min-h-screen flex flex-col items-center p-8 relative z-10 text-center">
+    <!-- Audio Player (Tersembunyi) -->
+    <!-- Ganti URL 'src' di bawah ini dengan tautan lagu mp3 Wedding Al-Muqit milik Anda -->
+    <audio id="bg-music" loop>
+        <source src="lagu-almuqit.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- ================= HALAMAN DEPAN (COVER) ================= -->
+    <div id="cover-page" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#F4F7F5] bg-opacity-95 backdrop-blur-md px-6 text-center">
+        <p class="text-sm tracking-[0.3em] uppercase mb-4 text-[#5F8D76]">Pernikahan dari</p>
+        <h1 class="text-6xl md:text-8xl font-serif text-[var(--color-dark)] mb-4">Maiz <br><span class="text-4xl italic font-normal text-[#5F8D76]">&amp;</span><br> Nida</h1>
         
-        <!-- Kepada Tamu -->
-        <div class="w-full border border-[#A3B18A] p-4 bg-white/50 backdrop-blur-sm mb-12 animate-fade-in">
-            <p class="text-xs uppercase tracking-widest mb-1 text-[#758467]">Kepada Yth. Bapak/Ibu/Saudara/i</p>
-            <h2 id="nama-tamu" class="text-2xl font-bold font-serif my-2 text-[#2F3E2C]">Tamu Undangan</h2>
+        <div class="mt-8 mb-12">
+            <p class="text-xs uppercase tracking-widest text-gray-500 mb-2">Kepada Yth.</p>
+            <h2 id="nama-tamu-cover" class="text-2xl font-bold font-serif text-[var(--color-dark)]">Tamu Undangan</h2>
         </div>
 
-        <!-- Judul -->
-        <p class="text-sm tracking-[0.2em] uppercase mb-4 text-[#758467] animate-fade-in delay-100">
-            Pernikahan dari
-        </p>
-        <h1 class="text-5xl md:text-6xl font-semibold mb-6 leading-tight animate-fade-in delay-200">
-            Maiz <br> 
-            <span class="text-3xl italic font-normal text-[#A3B18A]">&amp;</span> <br> 
-            Nida
-        </h1>
+        <button onclick="bukaUndangan()" class="bg-[#5F8D76] text-white px-8 py-3 rounded-full uppercase tracking-widest text-sm font-semibold hover:bg-[#1E352F] transition-all shadow-lg transform hover:scale-105">
+            Buka Undangan
+        </button>
+    </div>
 
-        <!-- Ar-Rum: 21 -->
-        <div class="mt-8 mb-12 animate-fade-in delay-300">
-            <p class="text-xs md:text-sm font-light leading-relaxed max-w-sm mx-auto italic text-[#758467]">
-                "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang..." <br><span class="font-semibold">(QS. Ar-Rum: 21)</span>
+    <!-- ================= KONTEN UTAMA ================= -->
+    <main id="main-content" class="w-full max-w-2xl mx-auto flex flex-col items-center p-6 relative z-10 text-center opacity-0 transition-opacity duration-1000">
+        
+        <!-- Header Utama -->
+        <div class="reveal mt-16 mb-10 w-full">
+            <h1 class="text-6xl font-serif mb-4">M <span class="text-[#5F8D76]">&amp;</span> N</h1>
+            <p class="text-sm tracking-[0.2em] uppercase text-[#5F8D76]">2 Januari 2027</p>
+        </div>
+
+        <!-- Kutipan Ayat -->
+        <div class="reveal glass-panel p-8 my-10 w-full">
+            <p class="text-sm font-light leading-relaxed italic text-gray-700">
+                "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang..." <br>
+                <span class="font-semibold block mt-4 text-[#5F8D76] font-cinzel">(QS. Ar-Rum: 21)</span>
             </p>
         </div>
 
-        <!-- Mempelai -->
-        <div class="w-full my-8 space-y-8 animate-fade-in delay-300">
-            <div>
-                <h2 class="text-3xl font-semibold mb-1">Ilham Maizzudin</h2>
-                <p class="text-sm font-light">Putra pertama dari Bapak Suroso & Ibu Maria Sulistyawati</p>
-            </div>
-            <div class="text-3xl font-serif text-[#A3B18A]">&amp;</div>
-            <div>
-                <h2 class="text-3xl font-semibold mb-1">Nida Fauzia</h2>
-                <p class="text-sm font-light">Putri kedua dari Bapak Nanang Iskadri (rahimahullah wa ghofaro lahu) & Ibu Dariningsih</p>
-            </div>
-        </div>
-
-        <!-- Tanggal & Lokasi -->
-        <div class="border border-[#A3B18A] p-6 rounded-t-full w-full max-w-sm mt-8 animate-fade-in delay-300">
-            <h2 class="text-2xl font-semibold mb-6">Sabtu, 2 Januari 2027</h2>
-            
-            <div class="mb-4">
-                <h3 class="text-xl font-semibold tracking-wider">AKAD NIKAH</h3>
-                <p class="text-sm font-light mt-1">08.00 - 09.00 WIB</p>
-            </div>
-            <div class="mb-6">
-                <h3 class="text-xl font-semibold tracking-wider">RESEPSI</h3>
-                <p class="text-sm font-light mt-1">09.30 - 11.30 WIB</p>
+        <!-- Profil Mempelai -->
+        <div class="reveal w-full my-12 space-y-12">
+            <!-- Mempelai Pria -->
+            <div class="glass-panel p-6 w-full">
+                <h2 class="text-3xl font-serif mb-2 font-bold text-[#1E352F]">Ilham Maizzudin</h2>
+                <p class="text-xs font-light text-gray-600">Putra pertama dari <br>Bapak Suroso & Ibu Maria Sulistyawati</p>
             </div>
             
-            <div class="border-t border-[#A3B18A] pt-4 mt-4">
-                <p class="font-semibold">Waroeng Omah Sawah</p>
-                <p class="text-xs font-light mt-1 leading-relaxed">Miri, Timbulharjo, Kec. Sewon, Kabupaten Bantul,<br>Daerah Istimewa Yogyakarta 55185</p>
+            <div class="text-4xl font-serif text-[#5F8D76]">&amp;</div>
+            
+            <!-- Mempelai Wanita -->
+            <div class="glass-panel p-6 w-full">
+                <h2 class="text-3xl font-serif mb-2 font-bold text-[#1E352F]">Nida Fauzia</h2>
+                <p class="text-xs font-light text-gray-600">Putri kedua dari <br>Bapak Nanang Iskadri (rahimahullah) & Ibu Dariningsih</p>
             </div>
         </div>
 
-        <!-- Kisah / Story -->
-        <div class="mt-16 mb-8 text-left animate-fade-in delay-300 max-w-sm w-full">
-            <h3 class="text-2xl font-semibold text-center mb-6">Berawal dari Pertemuan,<br>Bermuara pada Ketaatan</h3>
-            <p class="text-sm font-light leading-relaxed mb-4 text-justify">
-                Keberanian seorang laki-laki bukan sekadar terucap melalui kata-kata, melainkan nyata dalam langkah dan kesungguhannya. Begitulah Allah menuntun dua hati untuk saling menemukan, melalui perantara Ustazah Ismaliah, sosok yang kami anggap seperti ibu sendiri.
-            </p>
-            <p class="text-sm font-light leading-relaxed mb-4 text-justify">
-                Sebuah pesan WhatsApp tentang seorang ikhwan yang siap menikah menjadi awal kisah Nida dan Maiz. Berawal dari pertukaran CV, Alhamdulillah, Allah hadirkan kecocokan dan kemantapan hati. Bahkan sebelum melihat rupa Nida, Maiz telah lebih dahulu memantapkan niatnya. Sebab terkadang, kesungguhan menemukan jalannya sebelum mata sempat memandang.
-            </p>
-            <p class="text-sm font-light leading-relaxed mb-4 text-justify">
-                Dari sebuah pesan sederhana, dimulailah perjalanan yang begitu singkat: ta’aruf pada September 2026, nazhor dan khitbah pada Oktober 2026, hingga akad dan walimah pada Januari 2027. Insyaallah, sebuah awal untuk membangun rumah tangga sebagai ladang ibadah dan mengikuti sunnah Rasulullah ﷺ.
-            </p>
-            <p class="text-sm font-light leading-relaxed mb-8 text-justify">
-                Semoga Allah memberkahi setiap langkah, melapangkan pintu rezeki, serta menuntun kami untuk senantiasa saling menguatkan dalam kebaikan. Semoga cinta ini bukan sekadar tentang saling menemukan di dunia, melainkan tentang berjalan beriringan dalam ibadah hingga kelak Allah pertemukan kembali di surga-Nya.
-            </p>
-            <p class="text-center font-semibold text-[#758467] text-lg">#ProMaiztoNida</p>
+        <!-- Detail Acara -->
+        <div class="reveal w-full my-16">
+            <h3 class="text-3xl font-serif mb-8 text-[#5F8D76]">Rangkaian Acara</h3>
+            
+            <div class="glass-panel p-8 w-full relative overflow-hidden">
+                <!-- Aksen daun di pojok form -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-[#5F8D76] opacity-10 rounded-full blur-2xl"></div>
+                
+                <h4 class="text-2xl font-bold font-serif mb-2">Sabtu, 2 Januari 2027</h4>
+                <div class="w-16 h-1 bg-[#5F8D76] mx-auto mb-6 rounded-full"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+                    <div>
+                        <h3 class="text-xl font-semibold tracking-wider text-[#1E352F]">AKAD NIKAH</h3>
+                        <p class="text-sm font-light mt-1">08.00 - 09.00 WIB</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold tracking-wider text-[#1E352F]">RESEPSI</h3>
+                        <p class="text-sm font-light mt-1">09.30 - 11.30 WIB</p>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-300 pt-6 mt-4">
+                    <p class="font-bold text-lg text-[#1E352F]">Waroeng Omah Sawah</p>
+                    <p class="text-xs font-light mt-2 leading-relaxed">Miri, Timbulharjo, Kec. Sewon, Kabupaten Bantul,<br>Daerah Istimewa Yogyakarta 55185</p>
+                    <a href="https://maps.google.com" target="_blank" class="inline-block mt-4 text-xs font-semibold text-white bg-[#5F8D76] px-4 py-2 rounded-full shadow hover:bg-[#1E352F] transition">Lihat Peta Lokasi</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kisah Cerita -->
+        <div class="reveal text-left my-16 w-full">
+            <h3 class="text-3xl font-serif text-center mb-10 text-[#1E352F]">Berawal dari Pertemuan,<br>Bermuara pada Ketaatan</h3>
+            
+            <div class="space-y-6 text-sm font-light leading-loose text-gray-700 text-justify relative">
+                <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#5F8D76] to-transparent rounded-full opacity-30 -ml-4"></div>
+                <p>
+                    Keberanian seorang laki-laki bukan sekadar terucap melalui kata-kata, melainkan nyata dalam langkah dan kesungguhannya. Begitulah Allah menuntun dua hati untuk saling menemukan, melalui perantara Ustazah Ismaliah, sosok yang kami anggap seperti ibu sendiri.
+                </p>
+                <p>
+                    Sebuah pesan WhatsApp tentang seorang ikhwan yang siap menikah menjadi awal kisah Nida dan Maiz. Berawal dari pertukaran CV, Alhamdulillah, Allah hadirkan kecocokan dan kemantapan hati. Bahkan sebelum melihat rupa Nida, Maiz telah lebih dahulu memantapkan niatnya.
+                </p>
+                <p>
+                    Dari sebuah pesan sederhana, dimulailah perjalanan yang begitu singkat: ta’aruf pada September 2026, nazhor dan khitbah pada Oktober 2026, hingga akad dan walimah pada Januari 2027. Insyaallah, sebuah awal untuk membangun rumah tangga sebagai ladang ibadah.
+                </p>
+                <p>
+                    Semoga cinta ini bukan sekadar tentang saling menemukan di dunia, melainkan tentang berjalan beriringan dalam ibadah hingga kelak Allah pertemukan kembali di surga-Nya.
+                </p>
+            </div>
+            <p class="text-center font-bold text-[#5F8D76] text-xl mt-8 font-cinzel">#ProMaiztoNida</p>
         </div>
 
         <!-- RSVP Form -->
-        <div class="w-full mt-12 border-t border-[#A3B18A] pt-10">
-            <h3 class="text-2xl font-semibold mb-6">RSVP & Ucapan</h3>
+        <div class="reveal w-full my-16 glass-panel p-8">
+            <h3 class="text-3xl font-serif mb-6 text-[#1E352F]">Kehadiran & Doa</h3>
             <form id="rsvp-form" class="space-y-4 text-left">
-                <input type="text" id="nama" placeholder="Nama Anda" class="w-full border border-[#A3B18A] p-3 bg-transparent text-sm focus:outline-none" required>
-                <select id="kehadiran" class="w-full border border-[#A3B18A] p-3 bg-transparent text-sm focus:outline-none" required>
+                <input type="text" id="nama" placeholder="Nama Anda" class="w-full border-b-2 border-gray-300 p-3 bg-transparent text-sm focus:outline-none focus:border-[#5F8D76] transition-colors" required>
+                <select id="kehadiran" class="w-full border-b-2 border-gray-300 p-3 bg-transparent text-sm focus:outline-none focus:border-[#5F8D76] transition-colors" required>
                     <option value="" disabled selected>Konfirmasi Kehadiran</option>
-                    <option value="Hadir">Hadir</option>
-                    <option value="Tidak Hadir">Tidak Hadir</option>
+                    <option value="Hadir">Insyaallah Hadir</option>
+                    <option value="Tidak Hadir">Maaf, Belum Bisa Hadir</option>
                 </select>
-                <textarea id="ucapan" placeholder="Tulis ucapan dan doa..." rows="4" class="w-full border border-[#A3B18A] p-3 bg-transparent text-sm focus:outline-none" required></textarea>
-                <button type="button" class="w-full bg-[#2F3E2C] text-white px-4 py-3 font-semibold uppercase tracking-widest text-sm hover:bg-[#758467] transition">Kirim Ucapan</button>
+                <textarea id="ucapan" placeholder="Tulis ucapan dan doa untuk mempelai..." rows="3" class="w-full border-b-2 border-gray-300 p-3 bg-transparent text-sm focus:outline-none focus:border-[#5F8D76] transition-colors" required></textarea>
+                <button type="button" class="w-full bg-[#1E352F] text-white px-4 py-3 rounded-full font-semibold uppercase tracking-widest text-sm hover:bg-[#5F8D76] transition-all shadow-md mt-4">Kirim Pesan</button>
             </form>
         </div>
-
+        
+        <footer class="mt-10 mb-20 text-xs text-gray-500 font-light">
+            &copy; 2027. Maiz & Nida.
+        </footer>
     </main>
 
-    <!-- Ornamen Bawah -->
-    <div class="absolute bottom-0 right-0 w-40 h-40 md:w-56 md:h-56 opacity-50 animate-float pointer-events-none" style="animation-duration: 8s; animation-delay: 1s;">
-        <svg viewBox="0 0 200 200" fill="#849974" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="100" cy="100" r="80" opacity="0.2"/>
-            <path d="M100,20 C144,20 180,56 180,100 C180,144 144,180 100,180 C56,180 20,144 20,100 C20,56 56,20 100,20 Z" opacity="0.3"/>
-        </svg>
-    </div>
-
     <script>
-        // Script menangkap nama tamu dari URL parameter (?to=Nama+Tamu)
+        // 1. Tangkap Nama Tamu dari URL
         const urlParams = new URLSearchParams(window.location.search);
         const namaTamu = urlParams.get('to');
         if (namaTamu) {
-            document.getElementById('nama-tamu').innerText = namaTamu;
+            document.getElementById('nama-tamu-cover').innerText = namaTamu;
         }
+
+        // 2. Fungsi Buka Undangan
+        function bukaUndangan() {
+            // Hilangkan Halaman Depan
+            document.getElementById('cover-page').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('cover-page').style.visibility = 'hidden';
+            }, 1000);
+            
+            // Buka Scroll dan tampilkan konten utama
+            document.body.style.overflow = 'auto';
+            document.getElementById('main-content').style.opacity = '1';
+            
+            // Putar Musik
+            const audio = document.getElementById('bg-music');
+            audio.play().catch(error => console.log("Autoplay diblokir browser, pengguna harus klik manual", error));
+            
+            // Panggil fungsi animasi scroll pertama kali
+            reveal();
+        }
+
+        // 3. Animasi Scroll (Intersection Observer alternatif menggunakan event listener murni)
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100; // Jarak kemunculan sebelum masuk layar
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
     </script>
 </body>
 </html>
